@@ -258,7 +258,7 @@ function ListingOverview() {
         <div style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888', marginBottom: 10 }}>Showing 423 listings</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 10 }}>
           {sampleListings.map((l, i) =>
-          <div key={i} className="listing-card" style={{ cursor: 'pointer' }} onClick={() => window.location.href = 'Listing Detail.html'}>
+          <div key={i} className="listing-card" style={{ cursor: 'pointer' }} onClick={() => window.location.href = 'listing-detail.html'}>
               {/* image with type badge overlay */}
               <div className="card-img" style={{ height: 90, position: 'relative' }}>
                 <span style={{ fontSize: 9, textAlign: 'center', padding: 4 }}>expert photo</span>

@@ -82,7 +82,7 @@ function Sidebar() {
     <div className="sidebar">
       <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 18, marginBottom: 8 }}>empowr.</div>
       <div className="nav-section">Backoffice</div>
-      {main.map((i) => <div key={i} className={`nav-item ${i === 'Listings' ? 'active' : ''}`} onClick={() => i === 'Listings' && (window.location.href = 'Listing Overview.html')} style={{ cursor: i === 'Listings' ? 'pointer' : 'default' }}>{i}</div>)}
+      {main.map((i) => <div key={i} className={`nav-item ${i === 'Listings' ? 'active' : ''}`} onClick={() => i === 'Listings' && (window.location.href = './')} style={{ cursor: i === 'Listings' ? 'pointer' : 'default' }}>{i}</div>)}
       <div className="nav-section" style={{ marginTop: 12 }}>Legacy</div>
       {legacy.map((i) => <div key={i} className="nav-item" style={{ color: '#aaa' }}>{i}</div>)}
     </div>);
@@ -118,7 +118,7 @@ function TopSection({ status, exclusive, activeAction }) {
     <div style={{ borderBottom: '2px solid #333', background: '#ede9e1', padding: '12px 24px' }}>
       {/* Breadcrumb */}
       <div style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888', marginBottom: 8 }}>
-        <span style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.location.href = 'Listing Overview.html'}>Listings</span>
+        <span style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.location.href = './'}>Listings</span>
         <span style={{ margin: '0 6px' }}>›</span>
         <span>Yvette Reijnen</span>
       </div>

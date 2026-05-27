@@ -1,0 +1,58 @@
+name: Notify prototype updates
+
+on:
+  deployment_status:
+
+jobs:
+  notify:
+    if: >
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment.environment == 'github-pages'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          ref: ${{ github.event.deployment.sha }}
+
+      - id: changed
+        name: Detect changed prototype folders
+        run: |
+          mapfile -t prototypes < <(find . -maxdepth 2 -name index.html -not -path './.*' \
+            | sed 's|^\./||;s|/index.html$||' | sort -u)
+
+          changed_files=$(git diff --name-only HEAD^ HEAD)
+          changed=()
+          for p in "${prototypes[@]}"; do
+            if echo "$changed_files" | grep -q "^${p}/"; then
+              changed+=("$p")
+            fi
+          done
+
+          printf '%s\n' "${changed[@]}" | jq -R . | jq -sc . > /tmp/changed.json
+          echo "list=$(cat /tmp/changed.json)" >> "$GITHUB_OUTPUT"
+          echo "any=$([ ${#changed[@]} -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Node
+        if: steps.changed.outputs.any == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        if: steps.changed.outputs.any == 'true'
+        run: npm install --no-save playwright@1.48 @slack/web-api@7
+
+      - name: Install Playwright browser
+        if: steps.changed.outputs.any == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Screenshot + Slack notify
+        if: steps.changed.outputs.any == 'true'
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ vars.SLACK_CHANNEL_ID }}
+          CHANGED: ${{ steps.changed.outputs.list }}
+          COMMIT_URL: ${{ github.event.deployment.repository_url }}/commit/${{ github.event.deployment.sha }}
+          PAGES_BASE: https://empowr-nl.github.io/prototypes
+        run: node .github/scripts/notify.mjs

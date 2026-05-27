@@ -1,0 +1,371 @@
+{
+  "source": {
+    "filename": "Empowr – HR Hub (new app).fig",
+    "nodeCount": 155647,
+    "pages": [
+      {
+        "id": "4334:37526",
+        "name": "  🚀 Sharing Expert profile (public link)",
+        "selected": true
+      },
+      {
+        "id": "1586:35810",
+        "name": "  🚀 Design v1.1 – Expert Advice In-Platform",
+        "selected": true
+      },
+      {
+        "id": "745:52725",
+        "name": "  🚀 Design v1 – MVP app",
+        "selected": true
+      },
+      {
+        "id": "1434:81255",
+        "name": "  📃 MVP Email Templates",
+        "selected": true
+      },
+      {
+        "id": "1331:72557",
+        "name": "---",
+        "selected": true
+      },
+      {
+        "id": "216:74022",
+        "name": "🧐 Design exploration & prototype v2",
+        "selected": true
+      },
+      {
+        "id": "0:1",
+        "name": "✏️ Wireframes",
+        "selected": true
+      },
+      {
+        "id": "787:107979",
+        "name": "⚙️ Local components",
+        "selected": true
+      },
+      {
+        "id": "175:4236",
+        "name": "📦 Archive",
+        "selected": true
+      },
+      {
+        "id": "4244:62948",
+        "name": "Misc",
+        "selected": true
+      }
+    ],
+    "userSelectedFrames": [
+      "/Design-v1-MVP-app/Insights"
+    ]
+  },
+  "components": [
+    {
+      "name": "SidebarNavigation3",
+      "figmaId": "237:40790",
+      "variantProps": [],
+      "valueProps": []
+    },
+    {
+      "name": "CaseStats",
+      "figmaId": "261:33990",
+      "variantProps": [],
+      "valueProps": [
+        "expertInvolved",
+        "relatedCases"
+      ]
+    },
+    {
+      "name": "ShareExpertPage",
+      "figmaId": "307:118720",
+      "variantProps": [],
+      "valueProps": []
+    },
+    {
+      "name": "TooltipIntake",
+      "figmaId": "485:45296",
+      "variantProps": [],
+      "valueProps": []
+    },
+    {
+      "name": "Card",
+      "figmaId": "513:50916",
+      "variantProps": [
+        "state"
+      ],
+      "valueProps": []
+    },
+    {
+      "name": "Type",
+      "figmaId": "518:46191",
+      "variantProps": [
+        "variant"
+      ],
+      "valueProps": [
+        "verified"
+      ]
+    },
+    {
+      "name": "CaseStats2",
+      "figmaId": "762:88922",
+      "variantProps": [],
+      "valueProps": []
+    },
+    {
+      "name": "Location",
+      "figmaId": "791:95076",
+      "variantProps": [
+        "type"
+      ],
+      "valueProps": []
+    },
+    {
+      "name": "Header",
+      "figmaId": "3025:31221",
+      "variantProps": [],
+      "valueProps": []
+    },
+    {
+      "name": "ContactCard",
+      "figmaId": "3304:36790",
+      "variantProps": [
+        "state"
+      ],
+      "valueProps": []
+    }
+  ],
+  "tokens": {
+    "count": 1424,
+    "modes": [
+      "Mode 1",
+      "Style",
+      "Light mode",
+      "Dark mode",
+      "Default",
+      "Value",
+      "Value",
+      "Baseline"
+    ]
+  },
+  "styles": {
+    "text": 0,
+    "effect": 0
+  },
+  "warnings": [
+    {
+      "component": "SidebarNavigation3",
+      "nodeId": "237:40713",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=sm, Status icon=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "SidebarNavigation3",
+      "nodeId": "237:40714",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=sm, Hierarchy=Tertiary, State=Default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "SidebarNavigation3",
+      "nodeId": "237:40811",
+      "kind": "external-instance",
+      "detail": "instance of \"grid_view\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "SidebarNavigation3",
+      "nodeId": "237:40741",
+      "kind": "external-instance",
+      "detail": "instance of \"calendar_month\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "SidebarNavigation3",
+      "nodeId": "237:40750",
+      "kind": "external-instance",
+      "detail": "instance of \"trending_up\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "SidebarNavigation3",
+      "nodeId": "237:40764",
+      "kind": "external-instance",
+      "detail": "instance of \"Type=Card, Open=False, Breakpoint=Desktop\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "ShareExpertPage",
+      "nodeId": "307:118016",
+      "kind": "external-instance",
+      "detail": "instance of \"check\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "TooltipIntake",
+      "nodeId": "485:45289",
+      "kind": "external-instance",
+      "detail": "instance of \"Base Tooltip\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Card",
+      "nodeId": "787:110480",
+      "kind": "external-instance",
+      "detail": "instance of \"marker-pin-01\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Card",
+      "nodeId": "787:111688",
+      "kind": "external-instance",
+      "detail": "instance of \"globe-01\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Card",
+      "nodeId": "513:50916",
+      "kind": "variant-root-only",
+      "detail": "variant deltas capture root-level styles only; nested-child differences not diffed"
+    },
+    {
+      "component": "Type",
+      "nodeId": "518:46193",
+      "kind": "external-instance",
+      "detail": "instance of \"psychology\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Type",
+      "nodeId": "518:46191",
+      "kind": "variant-root-only",
+      "detail": "variant deltas capture root-level styles only; nested-child differences not diffed"
+    },
+    {
+      "component": "CaseStats2",
+      "nodeId": "762:88924",
+      "kind": "external-instance",
+      "detail": "instance of \"Case stats card\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "CaseStats2",
+      "nodeId": "762:88925",
+      "kind": "external-instance",
+      "detail": "instance of \"Case stats card\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95114",
+      "kind": "external-instance",
+      "detail": "instance of \"type=leading icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95116",
+      "kind": "external-instance",
+      "detail": "instance of \"type=all icons, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95117",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95118",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95119",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95120",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95121",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95122",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95123",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95124",
+      "kind": "external-instance",
+      "detail": "instance of \"type=no icon, state=default\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Location",
+      "nodeId": "791:95076",
+      "kind": "variant-root-only",
+      "detail": "variant deltas capture root-level styles only; nested-child differences not diffed"
+    },
+    {
+      "component": "Header",
+      "nodeId": "3462:38364",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=sm, Hierarchy=Secondary, State=Default, Icon only=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Header",
+      "nodeId": "3025:31191",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=sm, Placeholder=False, Text=True, Status icon=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Header",
+      "nodeId": "3025:31195",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=sm, Type=Badge modern, Icon=False, Color=Gray\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Header",
+      "nodeId": "3025:31200",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=md, Hierarchy=Secondary, State=Disabled, Icon only=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Header",
+      "nodeId": "3025:31201",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=md, Hierarchy=Secondary, State=Default, Icon only=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "Header",
+      "nodeId": "3025:31202",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=md, Hierarchy=Primary, State=Default, Icon only=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "ContactCard",
+      "nodeId": "3304:36760",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=sm, Placeholder=False, Text=True, Status icon=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "ContactCard",
+      "nodeId": "3586:61045",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=md, Hierarchy=Secondary, State=Default, Icon only=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "ContactCard",
+      "nodeId": "3586:61335",
+      "kind": "external-instance",
+      "detail": "instance of \"Size=md, Hierarchy=Primary, State=Default, Icon only=False\" stubbed (not in file/selection)"
+    },
+    {
+      "component": "ContactCard",
+      "nodeId": "3304:36790",
+      "kind": "variant-root-only",
+      "detail": "variant deltas capture root-level styles only; nested-child differences not diffed"
+    }
+  ]
+}

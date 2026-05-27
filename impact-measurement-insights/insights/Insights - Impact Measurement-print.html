@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Inzichten · Empowr</title>
+<meta name="viewport" content="width=1440">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Wallop and Jeko aren't free — substitute close geometric sans pairs. */
+  :root {
+    /* DM Sans for body (Wallop-like geometric humanist) */
+    /* Sora for display (Jeko-like sharper grotesk) */
+  }
+  html, body { margin: 0; padding: 0; background: rgb(252,250,246); color: rgb(3,3,46); font-family: "DM Sans", Inter, system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  /* Substitute Wallop → DM Sans, Jeko → Sora */
+  [style*="Wallop"] { font-family: "DM Sans", Inter, system-ui, sans-serif !important; }
+  [style*="Jeko"]   { font-family: "Sora", "DM Sans", Inter, system-ui, sans-serif !important; }
+  button { font-family: inherit; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 999px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* ---------- PRINT ---------- */
+  @page { size: A3 landscape; margin: 12mm; }
+  @media print {
+    html, body { background: rgb(252,250,246) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    /* Hide sidebar + interactive chrome */
+    aside { display: none !important; }
+    [data-screen-label="Inzichten"] { padding: 0 !important; max-width: none !important; width: 100% !important; }
+    /* Hide Tweaks panel + its trigger */
+    [class*="tweaks"], [id*="tweak"], [data-tweaks-root], .tweaks-panel { display: none !important; }
+    /* Hide page-header range tabs + buttons so the layout is calm in print */
+    header button, header [role="tab"] { display: none !important; }
+    /* Cards should never split across pages */
+    section[data-card-id], section { break-inside: avoid; page-break-inside: avoid; }
+    /* Remove shadows so the PDF stays crisp */
+    * { box-shadow: none !important; }
+    /* Avoid clipping interactive overflow */
+    .recharts-tooltip-wrapper, [data-tooltip] { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="rgb(252,250,246)">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect x="60"  y="120" width="340" height="180" rx="20" fill="#fff" stroke="#f0f0f3"/>
+    <rect x="430" y="120" width="340" height="180" rx="20" fill="#fff" stroke="#f0f0f3"/>
+    <rect x="800" y="120" width="340" height="180" rx="20" fill="#fff" stroke="#f0f0f3"/>
+    <rect x="90"  y="240" width="120" height="22" rx="6" fill="#079455"/>
+    <rect x="210" y="240" width="180" height="22" rx="6" fill="#0BA5EC"/>
+    <rect x="460" y="240" width="80"  height="22" rx="6" fill="#079455"/>
+    <rect x="540" y="240" width="220" height="22" rx="6" fill="#0BA5EC"/>
+    <rect x="830" y="240" width="160" height="22" rx="6" fill="#079455"/>
+    <rect x="990" y="240" width="150" height="22" rx="6" fill="#0BA5EC"/>
+    <rect x="60" y="360" width="1080" height="380" rx="20" fill="#fff" stroke="#f0f0f3"/>
+    <path d="M120 660 L300 580 L460 600 L620 500 L780 520 L940 420 L1080 460"
+          fill="none" stroke="#0BA5EC" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M120 700 L300 660 L460 640 L620 580 L780 600 L940 540 L1080 560"
+          fill="none" stroke="#079455" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</template>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="chrome.jsx"></script>
+<script type="text/babel" src="impact.jsx"></script>
+<script type="text/babel" src="operational.jsx"></script>
+<script type="text/babel" src="app.jsx"></script>
+
+<script type="text/babel">
+  // Auto-print once everything is ready
+  (async () => {
+    try {
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+      // Wait for charts to size from ResizeObserver
+      await new Promise((r) => setTimeout(r, 1500));
+      window.print();
+    } catch (e) {
+      console.error(e);
+      window.print();
+    }
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Overview</title>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1a1a; font-family: 'Caveat', cursive; }
+
+  /* Sketch style */
+  .sketch { font-family: 'Caveat', cursive; }
+  .sk-box { border: 2px solid #333; border-radius: 3px; }
+  .sk-fill { background: #e8e4dd; }
+  .sk-fill-light { background: #f2efe9; }
+  .sk-fill-mid { background: #d4cfc7; }
+  .sk-fill-dark { background: #b8b3aa; }
+  .sk-fill-accent { background: #f5a623; }
+  .sk-fill-accent-light { background: #fde8b8; }
+  .sk-fill-green { background: #c8e6c9; }
+  .sk-fill-blue { background: #bbdefb; }
+  .sk-fill-orange { background: #ffe0b2; }
+  .sk-fill-red { background: #ffcdd2; }
+  .sk-fill-white { background: #fafaf8; }
+
+  .sk-label { font-size: 11px; color: #888; font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
+  .sk-txt { font-family: 'Caveat', cursive; }
+
+  .badge {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-family: 'Caveat', cursive;
+    font-weight: 600;
+    border: 1.5px solid #333;
+  }
+  .badge-green { background: #c8e6c9; }
+  .badge-orange { background: #ffe0b2; }
+  .badge-blue { background: #bbdefb; }
+  .badge-red { background: #ffcdd2; }
+  .badge-gray { background: #e0e0e0; }
+  .badge-yellow { background: #fff9c4; }
+
+  /* Annotation style */
+  .annotation {
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    color: #c0392b;
+    position: absolute;
+  }
+  .annotation::before { content: '↑ '; }
+
+  /* Tab styles */
+  .tab-bar { display: flex; gap: 2px; border-bottom: 2px solid #333; }
+  .tab {
+    padding: 5px 12px;
+    font-family: 'Caveat', cursive;
+    font-size: 14px;
+    border: 1.5px solid #333;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+    background: #e8e4dd;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .tab.active { background: #fafaf8; font-weight: 700; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 120px;
+    flex-shrink: 0;
+    background: #ede9e1;
+    border-right: 2px solid #333;
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .nav-item {
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 3px;
+    color: #444;
+  }
+  .nav-item.active { background: #333; color: #fafaf8; }
+  .nav-section { font-size: 10px; color: #888; font-family: 'DM Mono', monospace; margin: 6px 0 2px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* Cards */
+  .listing-card {
+    border: 1.5px solid #333;
+    border-radius: 4px;
+    background: #fafaf8;
+    overflow: hidden;
+  }
+  .card-img {
+    background: repeating-linear-gradient(
+      45deg, #d4cfc7, #d4cfc7 3px, #e8e4dd 3px, #e8e4dd 10px
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: #888;
+    font-family: 'DM Mono', monospace;
+  }
+  .card-body { padding: 6px 8px; }
+
+  input[type=range] { width: 100%; accent-color: #f5a623; }
+</style>
+</head>
+<body>
+<script type="text/babel">
+
+const { useState } = React;
+
+/* ── Shared Sidebar ── */
+function Sidebar({ active = 'Listings' }) {
+  const main = ['Today', 'Bookings', 'Customers', 'Listings', 'Advisory Calls'];
+  const legacy = ['Events', 'Products', 'Experts'];
+  return (
+    <div className="sidebar" style={{ minHeight: '100%' }}>
+      <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 16, marginBottom: 8 }}>empowr.</div>
+      <div className="nav-section">Backoffice</div>
+      {main.map((i) =>
+        <div key={i} className={`nav-item ${i === active ? 'active' : ''}`}>{i}</div>
+      )}
+      <div className="nav-section" style={{ marginTop: 12 }}>Legacy</div>
+      {legacy.map((i) =>
+        <div key={i} className="nav-item" style={{ color: '#aaa' }}>{i}</div>
+      )}
+    </div>);
+
+}
+
+/* ── Shared TopBar ── */
+function TopBar({ title, subtitle, action }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14 }}>
+      <div>
+        <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 22 }}>{title}</div>
+        {subtitle && <div style={{ fontFamily: 'Caveat', fontSize: 13, color: '#888' }}>{subtitle}</div>}
+      </div>
+      {action &&
+      <div style={{
+        border: '2px solid #333', borderRadius: 4,
+        padding: '5px 14px', fontFamily: 'Caveat', fontWeight: 700, fontSize: 14,
+        cursor: 'pointer', whiteSpace: 'nowrap', background: "rgb(255, 198, 104)"
+      }}>{action}</div>
+      }
+    </div>);
+
+}
+
+/* ── Shared Search + Filters ── */
+function SearchFilters({ compact }) {
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+      <div style={{
+        flex: 1, minWidth: 140, border: '1.5px solid #333', borderRadius: 4,
+        padding: '5px 10px', background: '#fafaf8', fontFamily: 'Caveat', fontSize: 13, color: '#aaa',
+        display: 'flex', alignItems: 'center', gap: 6
+      }}>
+        <span style={{ fontSize: 14 }}>🔍</span> Search listings...
+      </div>
+      <div style={{
+        border: '1.5px solid #333', borderRadius: 4, padding: '5px 12px',
+        background: '#fafaf8', fontFamily: 'Caveat', fontSize: 13, display: 'flex',
+        alignItems: 'center', gap: 6, cursor: 'pointer'
+      }}>Theme ▾</div>
+      <div style={{
+        border: '1.5px solid #333', borderRadius: 4, padding: '5px 12px',
+        background: '#fafaf8', fontFamily: 'Caveat', fontSize: 13, display: 'flex',
+        alignItems: 'center', gap: 6, cursor: 'pointer'
+      }}>Location ▾</div>
+      <div style={{
+        border: '1.5px solid #333', borderRadius: 4, padding: '5px 12px',
+        background: '#fafaf8', fontFamily: 'Caveat', fontSize: 13, display: 'flex',
+        alignItems: 'center', gap: 6, cursor: 'pointer'
+      }}>Expert Type ▾</div>
+    </div>);
+
+}
+
+/* ── Shared Tabs ── */
+function WorkflowTabs({ active = 'Live' }) {
+  const tabs = [
+  { label: 'Live', count: 423, color: 'badge-green' },
+  { label: 'New', count: 5, color: 'badge-blue' },
+  { label: 'Waiting on Expert new', count: 8, color: 'badge-yellow' },
+  { label: 'To review new', count: 4, color: 'badge-orange' },
+  { label: 'Waiting on Expert live', count: 3, color: 'badge-yellow' },
+  { label: 'To review live', count: 3, color: 'badge-orange' },
+  { label: 'In edit by us', count: 14, color: 'badge-gray' }];
+
+  return (
+    <div className="tab-bar" style={{ marginBottom: 14 }}>
+      {tabs.map((t) =>
+      <div key={t.label} className={`tab ${t.label === active ? 'active' : ''}`}>
+          {t.label}
+          <span className={`badge ${t.color}`} style={{ marginLeft: 5, fontSize: 11, padding: '0 5px' }}>{t.count}</span>
+        </div>
+      )}
+    </div>);
+
+}
+
+/* ────────────────────────────────────
+   WIREFRAME A — Card Grid (marketplace-style)
+──────────────────────────────────── */
+const sampleListings = [
+{ name: 'Yvette Reijnen', practice: 'Goed Gemoed Psychologie', type: 'Psychologist', themes: ['stress-and-burnout','boundaries-and-patterns','change-and-resilience'], status: 'published' },
+{ name: 'Trudy Satink', practice: 'Praktijk rouw van jou', type: 'Coach (Other)', themes: ['loss-and-grief','trauma-processing'], status: 'published' },
+{ name: 'Miluska de Ruiter', practice: 'De Ruiter Psychologie', type: 'Psychologist', themes: ['stress-and-burnout','sleep-and-recovery','focus-and-productivity'], status: 'published' },
+{ name: 'Imme Buijlinckx', practice: 'Imme Buijlinckx', type: 'Nutritionist', themes: ['physical-health-and-lifestyle','hormones-and-menopause'], status: 'draft' },
+{ name: 'Sandra Visser', practice: 'Visser Coaching', type: 'Coach (Cert.)', themes: ['career-and-reorientation','leadership-and-management'], status: 'review' },
+{ name: 'Martine Behrens', practice: 'MB Praktijk', type: 'Coach (Other)', themes: ['stress-and-burnout','self-confidence-and-assertivity','boundaries-and-patterns'], status: 'published' },
+{ name: 'Hans Doelen', practice: 'Ruimte om stil te staan', type: 'Coach (Other)', themes: ['loss-and-grief','relations-and-connections'], status: 'published' },
+{ name: 'Lotte Boekhout', practice: 'ACT Therapie', type: 'Therapist', themes: ['high-sensitivity-and-neurodiversity','reintegration-and-outplacement','focus-and-productivity'], status: 'published' },
+{ name: 'Sabine Wensing', practice: 'Sabine Wensing Coach', type: 'Coach (Other)', themes: ['career-and-reorientation','communication'], status: 'changes' },
+{ name: 'Eva van Duin', practice: 'Eva van Duin Psych.', type: 'Psychologist', themes: ['stress-and-burnout','trauma-processing','sleep-and-recovery'], status: 'published' },
+{ name: 'Shirley Nievan', practice: 'Nievan Begeleiding', type: 'Coach (Cert.)', themes: ['communication','relations-and-connections'], status: 'published' },
+{ name: 'Lisa Stevens', practice: 'LS Praktijk', type: 'Coach (Other)', themes: ['career-and-reorientation','leadership-and-management','change-and-resilience'], status: 'published' }];
+
+const themeLabel = (slug) => slug.split('-').map(w => w[0].toUpperCase()+w.slice(1)).join(' ');
+
+
+function StatusDot({ status }) {
+  const map = { published: '#4caf50', draft: '#bbb', review: '#2196f3', changes: '#f5a623' };
+  return <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: map[status] || '#bbb', border: '1.5px solid #333', marginRight: 4 }} />;
+}
+
+function ListingOverview() {
+  const [activeTab, setActiveTab] = useState('Live');
+  const tabs = ['Live', 'New', 'Waiting on Expert new', 'To review new', 'Waiting on Expert live', 'To review live', 'In edit by us'];
+  const tabCounts = { 'Live': 423, 'New': 5, 'Waiting on Expert new': 8, 'To review new': 4, 'Waiting on Expert live': 3, 'To review live': 3, 'In edit by us': 14 };
+  const tabColors = { 'Live': 'badge-green', 'New': 'badge-blue', 'Waiting on Expert new': 'badge-yellow', 'To review new': 'badge-orange', 'Waiting on Expert live': 'badge-yellow', 'To review live': 'badge-orange', 'In edit by us': 'badge-gray' };
+
+  return (
+    <div style={{ display: 'flex', height: '100%', background: '#fafaf8', fontSize: 13 }}>
+      <Sidebar />
+      <div style={{ flex: 1, padding: '16px 20px', overflow: 'auto' }}>
+        <TopBar title="Listing Overview" subtitle="Manage expert listings" action="+ Add Expert Listing" />
+        <SearchFilters />
+        <div className="tab-bar" style={{ marginBottom: 16 }}>
+          {tabs.map((t) =>
+          <div key={t} className={`tab ${t === activeTab ? 'active' : ''}`} onClick={() => setActiveTab(t)}>
+              {t}
+              <span className={`badge ${tabColors[t]}`} style={{ marginLeft: 5, fontSize: 11, padding: '0 5px' }}>{tabCounts[t]}</span>
+            </div>
+          )}
+        </div>
+        <div style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888', marginBottom: 10 }}>Showing 423 listings</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: 10 }}>
+          {sampleListings.map((l, i) =>
+          <div key={i} className="listing-card" style={{ cursor: 'pointer' }} onClick={() => window.location.href = 'Listing Detail.html'}>
+              {/* image with type badge overlay */}
+              <div className="card-img" style={{ height: 90, position: 'relative' }}>
+                <span style={{ fontSize: 9, textAlign: 'center', padding: 4 }}>expert photo</span>
+                <div style={{ position: 'absolute', top: 5, left: 5 }}>
+                  <span className="badge badge-gray" style={{ fontSize: 9, padding: '0 5px', background: 'rgba(255,255,255,0.9)' }}>{l.type}</span>
+                </div>
+              </div>
+              <div className="card-body">
+                <div style={{ fontWeight: 700, fontSize: 13, lineHeight: 1.2, marginBottom: 2 }}>{l.name}</div>
+                <div style={{ fontSize: 11, color: '#777', marginBottom: 6, lineHeight: 1.2 }}>{l.practice}</div>
+                <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', marginBottom: 6 }}>
+                  {l.themes.map(t => (
+                    <span key={t} style={{ display:'inline-block', padding:'1px 5px', borderRadius:10, fontSize:9, fontFamily:'Caveat,cursive', fontWeight:600, background:'#ede9e1', border:'1px solid #ccc', whiteSpace:'nowrap' }}>{themeLabel(t)}</span>
+                  ))}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <StatusDot status={l.status} />
+                  <span style={{ fontSize: 11, color: '#777', textTransform: 'capitalize' }}>{l.status === 'published' ? 'Live' : l.status}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>);
+
+}
+
+function App() {
+  return <div style={{width:'100vw',height:'100vh'}}><ListingOverview /></div>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<div id="root" style="width:100vw;height:100vh;"></div>
+</body>
+</html>

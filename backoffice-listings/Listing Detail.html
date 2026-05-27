@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Listing Detail</title>
+<template id="__bundler_thumbnail" data-bg-color="#f5f3ef">
+  <svg viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+    <rect width="800" height="500" fill="#f5f3ef"/>
+    <rect x="40" y="40" width="720" height="60" rx="6" fill="#e8e4dd"/>
+    <rect x="40" y="120" width="120" height="18" rx="4" fill="#d4cfc7"/>
+    <rect x="40" y="148" width="80" height="14" rx="4" fill="#e0dbd3"/>
+    <rect x="40" y="180" width="720" height="1" fill="#ddd"/>
+    <rect x="40" y="200" width="160" height="14" rx="4" fill="#e0dbd3"/>
+    <rect x="220" y="200" width="300" height="14" rx="4" fill="#e8e4dd"/>
+    <rect x="40" y="230" width="160" height="14" rx="4" fill="#e0dbd3"/>
+    <rect x="220" y="230" width="200" height="14" rx="4" fill="#e8e4dd"/>
+    <rect x="40" y="260" width="160" height="14" rx="4" fill="#e0dbd3"/>
+    <rect x="220" y="260" width="260" height="14" rx="4" fill="#e8e4dd"/>
+    <rect x="40" y="300" width="720" height="1" fill="#ddd"/>
+    <rect x="40" y="320" width="120" height="28" rx="4" fill="#333"/>
+  </svg>
+</template>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #fafaf8; font-family: 'Caveat', cursive; }
+
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 12px; font-family: 'Caveat', cursive; font-weight: 600; border: 1.5px solid #333; }
+  .badge-green  { background: #c8e6c9; }
+  .badge-orange { background: #ffe0b2; }
+  .badge-blue   { background: #bbdefb; }
+  .badge-gray   { background: #e0e0e0; }
+  .badge-yellow { background: #fff9c4; }
+  .badge-purple { background: #e1d5f5; }
+
+  .sidebar { width: 130px; flex-shrink: 0; background: #ede9e1; border-right: 2px solid #333; padding: 12px 10px; display: flex; flex-direction: column; gap: 4px; }
+  .nav-item { font-family: 'Caveat', cursive; font-size: 14px; padding: 5px 8px; border-radius: 3px; color: #444; cursor: pointer; }
+  .nav-item.active { background: #333; color: #fafaf8; }
+  .nav-section { font-size: 10px; color: #888; font-family: 'DM Mono', monospace; margin: 8px 0 2px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .detail-tab { padding: 7px 14px; font-family: 'Caveat', cursive; font-size: 14px; border: 1.5px solid #333; border-bottom: none; border-radius: 3px 3px 0 0; background: #e8e4dd; cursor: pointer; white-space: nowrap; }
+  .detail-tab.active { background: #fafaf8; font-weight: 700; }
+
+  .field-row { display: grid; grid-template-columns: 220px 1fr; gap: 16px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid #ede9e1; }
+  .field-label { font-family: 'Caveat', cursive; font-size: 14px; font-weight: 700; }
+  .field-hint  { font-family: 'Caveat', cursive; font-size: 12px; color: #888; margin-top: 2px; }
+  .sk-input { border: 1.5px solid #333; border-radius: 4px; padding: 7px 10px; font-family: 'Caveat', cursive; font-size: 14px; background: #fafaf8; width: 100%; }
+  .sk-textarea { border: 1.5px solid #333; border-radius: 4px; padding: 7px 10px; font-family: 'Caveat', cursive; font-size: 14px; background: #fafaf8; width: 100%; resize: vertical; }
+  .sk-btn { border: 2px solid #333; border-radius: 4px; padding: 6px 14px; font-family: 'Caveat', cursive; font-size: 14px; cursor: pointer; background: #fafaf8; font-weight: 600; }
+  .sk-btn-accent { background: #f5a623; border-color: #333; }
+  .sk-btn-danger { background: #ffebee; border-color: #e53935; color: #c62828; }
+  .sk-btn-ghost  { background: transparent; border-color: #bbb; color: #666; }
+
+  /* Sparkline-style mini graph */
+  svg.graph { overflow: visible; }
+
+  .stat-card { border: 1.5px solid #333; border-radius: 6px; background: #fafaf8; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+
+  .review-row { border: 1.5px solid #ddd; border-radius: 6px; padding: 10px 14px; background: #fafaf8; display: flex; gap: 12px; align-items: flex-start; }
+
+  .history-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed #ddd; }
+  .history-dot { width: 10px; height: 10px; border-radius: 50%; background: #333; border: 2px solid #fafaf8; box-shadow: 0 0 0 1.5px #333; flex-shrink: 0; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div id="root" style="width:100vw;height:100vh;"></div>
+<script type="text/babel">
+
+
+
+const { useState } = React;
+
+/* ── Sidebar ── */
+function Sidebar() {
+  const main = ['Today', 'Bookings', 'Customers', 'Listings', 'Advisory Calls'];
+  const legacy = ['Events', 'Products', 'Experts'];
+  return (
+    <div className="sidebar">
+      <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 18, marginBottom: 8 }}>empowr.</div>
+      <div className="nav-section">Backoffice</div>
+      {main.map((i) => <div key={i} className={`nav-item ${i === 'Listings' ? 'active' : ''}`} onClick={() => i === 'Listings' && (window.location.href = 'Listing Overview.html')} style={{ cursor: i === 'Listings' ? 'pointer' : 'default' }}>{i}</div>)}
+      <div className="nav-section" style={{ marginTop: 12 }}>Legacy</div>
+      {legacy.map((i) => <div key={i} className="nav-item" style={{ color: '#aaa' }}>{i}</div>)}
+    </div>);
+
+}
+
+/* ── Breadcrumb + top bar ── */
+function TopSection({ status, exclusive, activeAction }) {
+  const [lifecycle, setLifecycle] = useState('Live');
+  const [edits, setEdits] = useState('us');
+  const [holiday, setHoliday] = useState(false);
+  const [holidayDate, setHolidayDate] = useState('2026-07-15');
+
+  const editsCfg = {
+    none:   { label: 'No pending edits',   bg: '#f0ede8', fg: '#666',     dot: '#bbb' },
+    us:     { label: 'Edits by us',        bg: '#fde8b8', fg: '#7a5a10',  dot: '#f5a623' },
+    expert: { label: 'Edits by expert',    bg: '#dbe9ff', fg: '#1f3d80',  dot: '#2196f3' },
+  }[edits];
+
+  const cycle = (current, options, set) => () => set(options[(options.indexOf(current) + 1) % options.length]);
+
+  const Pill = ({ dot, bg, fg, children, onClick, title }) => (
+    <span onClick={onClick} title={title}
+      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 20,
+               border: '1.5px solid #333', background: bg, color: fg, fontFamily: 'Caveat', fontWeight: 700,
+               fontSize: 13, cursor: onClick ? 'pointer' : 'default', whiteSpace: 'nowrap' }}>
+      {dot && <span style={{ width: 8, height: 8, borderRadius: '50%', background: dot, border: '1.5px solid #333' }} />}
+      {children}
+    </span>
+  );
+
+  return (
+    <div style={{ borderBottom: '2px solid #333', background: '#ede9e1', padding: '12px 24px' }}>
+      {/* Breadcrumb */}
+      <div style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888', marginBottom: 8 }}>
+        <span style={{ cursor: 'pointer', textDecoration: 'underline' }} onClick={() => window.location.href = 'Listing Overview.html'}>Listings</span>
+        <span style={{ margin: '0 6px' }}>›</span>
+        <span>Yvette Reijnen</span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4, flexWrap: 'wrap' }}>
+            <span style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 22 }}>Yvette Reijnen</span>
+            <Pill
+              dot={lifecycle === 'Live' ? '#4caf50' : '#2196f3'}
+              bg={lifecycle === 'Live' ? '#dcecd9' : '#dbe9ff'}
+              fg={lifecycle === 'Live' ? '#1f5d1a' : '#1f3d80'}
+              onClick={cycle(lifecycle, ['Live', 'New'], setLifecycle)}
+              title="Click to toggle lifecycle">
+              {lifecycle}
+            </Pill>
+            <Pill
+              dot={editsCfg.dot} bg={editsCfg.bg} fg={editsCfg.fg}
+              onClick={cycle(edits, ['none', 'us', 'expert'], setEdits)}
+              title="Click to cycle edit state">
+              {editsCfg.label}
+            </Pill>
+            {exclusive && <span className="badge badge-purple">Exclusive</span>}
+          </div>
+          <div style={{ fontFamily: 'Caveat', fontSize: 13, color: '#666', marginBottom: 6 }}>Goed Gemoed Psychologie · Psychologist</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'Caveat', fontSize: 12, color: '#888' }}>
+            {!holiday ? (
+              <>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4caf50', display: 'inline-block' }} />
+                <span>Accepting bookings</span>
+                <span onClick={() => setHoliday(true)} style={{ cursor: 'pointer', textDecoration: 'underline', marginLeft: 4 }}>Set holiday</span>
+              </>
+            ) : (
+              <>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f5a623', display: 'inline-block' }} />
+                <span>Holiday · accepting from {new Date(holidayDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                <span onClick={() => setHoliday(false)} style={{ cursor: 'pointer', color: '#bbb', marginLeft: 4 }}>×</span>
+              </>
+            )}
+          </div>
+        </div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+          <button className="sk-btn sk-btn-ghost" style={{ fontSize: 13 }}>Unpublish</button>
+          <button className="sk-btn" style={{ background: '#f5a623', fontSize: 13, fontWeight: 700 }}>Mark as Waiting on Expert</button>
+        </div>
+      </div>
+    </div>);
+
+}
+
+/* ── Tab bar ── */
+const TABS = ['Overview', 'Expert', 'Marketplace', 'Listing', 'History'];
+
+function TabBar({ active, onChange }) {
+  return (
+    <div style={{ display: 'flex', gap: 2, borderBottom: '2px solid #333', padding: '0 24px', background: '#f5f2ec', flexWrap: 'nowrap', overflowX: 'auto' }}>
+      {TABS.map((t) =>
+      <div key={t} className={`detail-tab ${t === active ? 'active' : ''}`} onClick={() => onChange(t)}>{t}</div>
+      )}
+    </div>);
+
+}
+
+/* ── OVERVIEW TAB ── */
+function CombinedGraph({ revData, bkData, width=700, height=120 }) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const maxRev = Math.max(...revData);
+  const maxBk  = Math.max(...bkData);
+  const n = revData.length;
+  const barW = (width / n) * 0.5;
+  const gap  = width / n;
+  const linePts = revData.map((v,i) => {
+    const x = i * gap + gap / 2;
+    const y = height - 20 - (v / maxRev) * (height - 30);
+    return `${x},${y}`;
+  }).join(' ');
+  const areaFirst = `${gap/2},${height-20}`;
+  const areaLast  = `${(n-1)*gap+gap/2},${height-20}`;
+  return (
+    <div className="stat-card">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}}>
+        <div style={{fontFamily:'Caveat',fontWeight:700,fontSize:14}}>Revenue &amp; Bookings over time</div>
+        <div style={{display:'flex',gap:16}}>
+          <div style={{display:'flex',alignItems:'center',gap:5}}><div style={{width:12,height:3,background:'#f5a623',borderRadius:2}}/><span style={{fontFamily:'Caveat',fontSize:12,color:'#888'}}>Revenue</span></div>
+          <div style={{display:'flex',alignItems:'center',gap:5}}><div style={{width:10,height:10,background:'#5b8dd9',borderRadius:2,opacity:0.7}}/><span style={{fontFamily:'Caveat',fontSize:12,color:'#888'}}>Bookings</span></div>
+        </div>
+      </div>
+      <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="graph" preserveAspectRatio="none">
+        {bkData.map((v,i) => {
+          const barH = (v / maxBk) * (height - 30);
+          const x = i * gap + gap/2 - barW/2;
+          return <rect key={i} x={x} y={height-20-barH} width={barW} height={barH} fill="#5b8dd9" opacity={0.35} rx={2} />;
+        })}
+        <polyline points={`${areaFirst} ${linePts} ${areaLast}`} fill="#f5a623" fillOpacity={0.12} stroke="none" />
+        <polyline points={linePts} fill="none" stroke="#f5a623" strokeWidth={2.5} strokeLinejoin="round" />
+        {revData.map((v,i) => {
+          const x = i * gap + gap / 2;
+          const y = height - 20 - (v / maxRev) * (height - 30);
+          return <circle key={i} cx={x} cy={y} r={3} fill="#f5a623" stroke="#fafaf8" strokeWidth={1.5} />;
+        })}
+        {months.map((m,i) => (
+          <text key={m} x={i * gap + gap/2} y={height-4} textAnchor="middle" fontFamily="DM Mono,monospace" fontSize={8} fill="#aaa">{m}</text>
+        ))}
+        {[0,0.5,1].map(f => {
+          const y = height - 20 - f * (height - 30);
+          return <g key={f}>
+            <line x1={0} y1={y} x2={width} y2={y} stroke="#ede9e1" strokeWidth={1} strokeDasharray="4,4" />
+            <text x={2} y={y-3} fontFamily="DM Mono,monospace" fontSize={7} fill="#bbb">€{Math.round(maxRev*f/1000)}k</text>
+          </g>;
+        })}
+      </svg>
+    </div>
+  );
+}
+
+function TabOverview() {
+  const revData = [1200, 1800, 1400, 2200, 1900, 2600, 2400, 3100, 2800, 3400, 3200, 3900];
+  const bkData = [3, 5, 4, 7, 6, 8, 7, 9, 8, 10, 9, 11];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Stats row */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12 }}>
+        {[
+        { label: 'Total revenue', value: '€ 38,400', sub: 'all time' },
+        { label: 'Paid bookings', value: '192', sub: 'all time' },
+        { label: 'Intakes', value: '24', sub: 'no-charge sessions' },
+        { label: 'Advised', value: '17', sub: 'times advised after call' }].
+        map((s) =>
+        <div key={s.label} className="stat-card">
+            <div style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888' }}>{s.label}</div>
+            <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 28, lineHeight: 1 }}>{s.value}</div>
+            <div style={{ fontFamily: 'Caveat', fontSize: 11, color: '#aaa' }}>{s.sub}</div>
+          </div>
+        )}
+      </div>
+      {/* Charts row */}
+      <CombinedGraph revData={revData} bkData={bkData} width={700} height={120} />
+      {/* In-progress bookings */}
+      <div>
+        <a href="#" style={{ fontFamily: 'Caveat', fontSize: 14, color: '#333', textDecoration: 'underline', cursor: 'pointer' }}>View 3 in-progress bookings →</a>
+      </div>
+    </div>);
+
+}
+
+/* ── EXPERT TAB ── */
+function ImgPlaceholder({ size = 64 }) {
+  return (
+    <div style={{ width: size, height: size, borderRadius: '50%', border: '1.5px solid #333', background: 'repeating-linear-gradient(45deg,#d4cfc7,#d4cfc7 3px,#e8e4dd 3px,#e8e4dd 10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, color: '#888', fontFamily: 'DM Mono,monospace', flexShrink: 0 }}>photo</div>);
+
+}
+
+function TabExpert() {
+  const fields = [
+  { label: 'Avatar image', hint: 'Recommended 256×256px', type: 'img' },
+  { label: 'Full name', hint: 'Displayed on the platform', value: 'Yvette Reijnen' },
+  { label: 'Internal notes', hint: 'Only visible to backoffice team', type: 'textarea', value: 'Very responsive. Prefers morning sessions.' },
+  { label: 'BSN', hint: 'Burger Service Nummer', value: '123456789' },
+  { label: 'Address', hint: 'Home or practice address', value: 'Keizersgracht 123, Amsterdam' },
+  { label: 'Official company name', hint: 'As registered at KvK', value: 'Goed Gemoed Psychologie B.V.' },
+  { label: 'KvK number', hint: '', value: '12345678' },
+  { label: 'IBAN', hint: '', value: 'NL91 ABNA 0417 1643 00' },
+  { label: 'Field A', hint: '', value: '' },
+  { label: 'Field B', hint: '', value: '' }];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {fields.map((f, i) =>
+      <div key={i} className="field-row">
+          <div>
+            <div className="field-label">{f.label}</div>
+            {f.hint && <div className="field-hint">{f.hint}</div>}
+          </div>
+          <div>
+            {f.type === 'img' ?
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <ImgPlaceholder size={56} />
+                <button className="sk-btn" style={{ fontSize: 12 }}>Upload image</button>
+              </div> :
+          f.type === 'textarea' ?
+          <textarea className="sk-textarea" rows={3} defaultValue={f.value} /> :
+          <input className="sk-input" defaultValue={f.value} />}
+          </div>
+        </div>
+      )}
+      <div style={{ marginTop: 16, marginBottom: 32 }}><button className="sk-btn sk-btn-accent">Save changes</button></div>
+
+      <AccountUsers />
+
+      <div style={{ marginTop: 24, border: '2px solid #e53935', borderRadius: 6, padding: '16px 20px', background: '#fff8f8' }}>
+        <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 16, color: '#c62828', marginBottom: 12 }}>Danger zone</div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 14 }}>Delete expert permanently</div>
+            <div style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888' }}>Deletes expert account, listing, and all associated products. Cannot be undone.</div>
+          </div>
+          <button className="sk-btn sk-btn-danger">Delete expert + all products</button>
+        </div>
+      </div>
+    </div>);
+
+}
+
+/* ── REMOVED: TabAccount (merged into TabExpert) ── */
+function _TabAccountRemoved() {
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {fields.map((f, i) =>
+      <div key={i} className="field-row">
+          <div>
+            <div className="field-label">{f.label}</div>
+            {f.hint && <div className="field-hint">{f.hint}</div>}
+          </div>
+          <div>
+            {f.type === 'img' ?
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <ImgPlaceholder size={56} />
+                <button className="sk-btn" style={{ fontSize: 12 }}>Upload image</button>
+              </div> :
+          f.type === 'textarea' ?
+          <textarea className="sk-textarea" rows={3} defaultValue={f.value} /> :
+
+          <input className="sk-input" defaultValue={f.value} />
+          }
+          </div>
+        </div>
+      )}
+      <div style={{ marginTop: 16 }}><button className="sk-btn sk-btn-accent">Save changes</button></div>
+    </div>);
+
+}
+
+/* ── LOCATION & MARKETPLACE TAB ── */
+const ALL_THEMES = ['stress-and-burnout', 'sleep-and-recovery', 'self-confidence-and-assertivity', 'boundaries-and-patterns', 'career-and-reorientation', 'leadership-and-management', 'physical-health-and-lifestyle', 'relations-and-connections', 'high-sensitivity-and-neurodiversity', 'hormones-and-menopause', 'loss-and-grief', 'trauma-processing', 'communication', 'change-and-resilience', 'finance', 'focus-and-productivity', 'parenting', 'reintegration-and-outplacement'];
+const themeLabel = (slug) => slug.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ');
+
+function SectionHeading({ children }) {
+  return <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 16, color: '#555', borderBottom: '1.5px solid #ddd', paddingBottom: 4, marginBottom: 8, marginTop: 4 }}>{children}</div>;
+}
+
+function TabLocationMarketplace() {
+  const [selectedThemes, setSelectedThemes] = useState(['stress-and-burnout', 'boundaries-and-patterns', 'change-and-resilience']);
+  const [exclusive, setExclusive] = useState(true);
+  const toggle = (t) => setSelectedThemes((prev) => prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+      <SectionHeading>Location & availability</SectionHeading>
+
+      <div className="field-row">
+        <div>
+          <div className="field-label">Availability date</div>
+          <div className="field-hint">Date when listing becomes available again</div>
+        </div>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <input className="sk-input" style={{ width: 160 }} defaultValue="2026-05-01" type="date" />
+          <span style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888' }}>or set to Available now</span>
+          <button className="sk-btn" style={{ fontSize: 12 }}>Set available</button>
+        </div>
+      </div>
+
+      <div className="field-row">
+        <div>
+          <div className="field-label">Base region</div>
+          <div className="field-hint">Primary location of the expert</div>
+        </div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {['Online', 'Regio Groot-Amsterdam'].map((r, i) =>
+          <span key={i} style={{ border: '1.5px solid #333', borderRadius: 20, padding: '4px 12px', fontFamily: 'Caveat', fontSize: 13, background: i === 0 ? '#e8e4dd' : '#fde8b8', cursor: 'pointer' }}>{r}</span>
+          )}
+          <button className="sk-btn" style={{ fontSize: 12 }}>+ Add region</button>
+        </div>
+      </div>
+
+      <div className="field-row">
+        <div>
+          <div className="field-label">Travel regions</div>
+          <div className="field-hint">Where the expert is willing to travel to</div>
+        </div>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <div style={{ width: 14, height: 14, border: '1.5px solid #333', borderRadius: 2, background: '#f5a623', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>✓</div>
+            <span style={{ fontFamily: 'Caveat', fontSize: 13 }}>Willing to travel if travel fee (€0.23/km) is applicable</span>
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {['Regio Alkmaar', 'Regio Flevoland', 'Regio Utrecht'].map((r, i) =>
+            <span key={i} style={{ border: '1.5px solid #333', borderRadius: 20, padding: '4px 12px', fontFamily: 'Caveat', fontSize: 13, background: '#e8e4dd', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+                {r} <span style={{ color: '#999', fontSize: 11 }}>×</span>
+              </span>
+            )}
+            <button className="sk-btn" style={{ fontSize: 12 }}>+ Add region</button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginTop: 24 }} />
+      <SectionHeading>Marketplace</SectionHeading>
+
+      <div className="field-row">
+        <div><div className="field-label">Expert type</div><div className="field-hint">Primary classification</div></div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {['Psychologist', 'Coach (Cert.)', 'Coach (Other)', 'Therapist', 'Nutritionist'].map((t) =>
+          <span key={t} style={{ border: '1.5px solid #333', borderRadius: 20, padding: '4px 12px', fontFamily: 'Caveat', fontSize: 13, background: t === 'Psychologist' ? '#333' : ' #e8e4dd', color: t === 'Psychologist' ? '#fff' : '#333', cursor: 'pointer' }}>{t}</span>
+          )}
+        </div>
+      </div>
+
+      <div className="field-row">
+        <div><div className="field-label">Themes</div><div className="field-hint">Select all that apply</div></div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {ALL_THEMES.map((t) =>
+          <span key={t} onClick={() => toggle(t)} style={{ border: '1.5px solid #333', borderRadius: 20, padding: '3px 10px', fontFamily: 'Caveat', fontSize: 12, background: selectedThemes.includes(t) ? '#f5a623' : '#e8e4dd', cursor: 'pointer', fontWeight: selectedThemes.includes(t) ? 700 : 400 }}>
+              {themeLabel(t)}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="field-row">
+        <div><div className="field-label">Exclusivity</div><div className="field-hint">Restrict to one organisation</div></div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div onClick={() => setExclusive(!exclusive)} style={{ width: 36, height: 20, borderRadius: 10, background: exclusive ? '#f5a623' : '#ccc', border: '1.5px solid #333', position: 'relative', cursor: 'pointer', transition: 'background 0.2s' }}>
+              <div style={{ position: 'absolute', top: 2, left: exclusive ? 16 : 2, width: 14, height: 14, borderRadius: '50%', background: '#fafaf8', border: '1.5px solid #333', transition: 'left 0.2s' }} />
+            </div>
+            <span style={{ fontFamily: 'Caveat', fontSize: 14 }}>{exclusive ? 'Exclusive' : 'Generally available'}</span>
+          </div>
+          {exclusive &&
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontFamily: 'Caveat', fontSize: 13, color: '#888' }}>Organisation:</span>
+              <span style={{ border: '1.5px solid #333', borderRadius: 4, padding: '4px 12px', fontFamily: 'Caveat', fontSize: 13, background: '#e1d5f5' }}>Mindful Corp</span>
+              <button className="sk-btn" style={{ fontSize: 12 }}>Change</button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div style={{ marginTop: 16 }}><button className="sk-btn sk-btn-accent">Save changes</button></div>
+    </div>);
+
+}
+
+/* ── ACCOUNT USERS ── */
+function AccountUsers() {
+  const [users, setUsers] = React.useState([
+    { id: 1, name: 'Yvette Reijnen', email: 'yvette@goedgemoed.nl', role: 'Owner', lastActive: '29 Apr 2026 · 09:41', editing: false },
+    { id: 2, name: 'Marieke Hoorn', email: 'marieke@goedgemoed.nl', role: 'Admin', lastActive: '14 Mar 2026 · 11:20', editing: false },
+  ]);
+  const [adding, setAdding] = React.useState(false);
+  const [newUser, setNewUser] = React.useState({ name: '', email: '', role: 'Admin' });
+
+  const updateUser = (id, field, val) =>
+    setUsers(u => u.map(x => x.id === id ? { ...x, [field]: val } : x));
+  const saveUser = (id) => setUsers(u => u.map(x => x.id === id ? { ...x, editing: false } : x));
+  const deleteUser = (id) => setUsers(u => u.filter(x => x.id !== id));
+  const addUser = () => {
+    if (!newUser.email) return;
+    setUsers(u => [...u, { ...newUser, id: Date.now(), lastActive: '—', editing: false }]);
+    setNewUser({ name: '', email: '', role: 'Admin' });
+    setAdding(false);
+  };
+
+  return (
+    <div className="field-row" style={{ alignItems: 'flex-start' }}>
+      <div>
+        <div className="field-label">Users</div>
+        <div className="field-hint">Login accounts linked to this listing</div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+        {users.map(u => (
+          <div key={u.id} style={{ border: '1.5px solid #ddd', borderRadius: 6, padding: '10px 12px', background: '#faf9f7', display: 'flex', alignItems: 'center', gap: 10 }}>
+            {u.editing ? (
+              <div style={{ display: 'flex', gap: 8, flex: 1, flexWrap: 'wrap', alignItems: 'center' }}>
+                <input className="sk-input" style={{ width: 130 }} value={u.name} onChange={e => updateUser(u.id, 'name', e.target.value)} placeholder="Name" />
+                <input className="sk-input" style={{ width: 190 }} value={u.email} onChange={e => updateUser(u.id, 'email', e.target.value)} placeholder="Email" />
+                <select className="sk-input" style={{ width: 100 }} value={u.role} onChange={e => updateUser(u.id, 'role', e.target.value)}>
+                  {['Owner', 'Admin', 'Viewer'].map(r => <option key={r}>{r}</option>)}
+                </select>
+                <button className="sk-btn sk-btn-accent" style={{ fontSize: 12 }} onClick={() => saveUser(u.id)}>Save</button>
+                <button className="sk-btn" style={{ fontSize: 12 }} onClick={() => updateUser(u.id, 'editing', false)}>Cancel</button>
+              </div>
+            ) : (
+              <>
+                <div style={{ flex: 1, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 14, minWidth: 120 }}>{u.name || '—'}</span>
+                  <span style={{ fontFamily: 'Caveat', fontSize: 13, color: '#555', minWidth: 170 }}>{u.email}</span>
+                  <span style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888', border: '1px solid #ddd', borderRadius: 20, padding: '1px 10px', background: '#f0ede8' }}>{u.role}</span>
+                  <span style={{ fontFamily: 'Caveat', fontSize: 11, color: '#aaa' }}>Active {u.lastActive}</span>
+                </div>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  <button className="sk-btn" style={{ fontSize: 11, padding: '3px 10px' }} onClick={() => updateUser(u.id, 'editing', true)}>Edit</button>
+                  <button className="sk-btn sk-btn-danger" style={{ fontSize: 11, padding: '3px 10px' }} onClick={() => deleteUser(u.id)}>Delete</button>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+        {adding ? (
+          <div style={{ border: '1.5px dashed #bbb', borderRadius: 6, padding: '10px 12px', background: '#f5f3ef', display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <input className="sk-input" style={{ width: 130 }} value={newUser.name} onChange={e => setNewUser(n => ({ ...n, name: e.target.value }))} placeholder="Name" />
+            <input className="sk-input" style={{ width: 190 }} value={newUser.email} onChange={e => setNewUser(n => ({ ...n, email: e.target.value }))} placeholder="Email address" />
+            <select className="sk-input" style={{ width: 100 }} value={newUser.role} onChange={e => setNewUser(n => ({ ...n, role: e.target.value }))}>
+              {['Owner', 'Admin', 'Viewer'].map(r => <option key={r}>{r}</option>)}
+            </select>
+            <button className="sk-btn sk-btn-accent" style={{ fontSize: 12 }} onClick={addUser}>Add</button>
+            <button className="sk-btn" style={{ fontSize: 12 }} onClick={() => setAdding(false)}>Cancel</button>
+          </div>
+        ) : (
+          <button className="sk-btn" style={{ fontSize: 12, alignSelf: 'flex-start' }} onClick={() => setAdding(true)}>+ Add user</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ── LISTING & REVIEWS TAB ── */
+const reviewsData = [
+{ author: 'Jan de Vries', date: '12 Mar 2026', rating: 5, text: 'Yvette has helped me tremendously. Very empathetic and professional.', visible: true },
+{ author: 'Lena Hoorn', date: '4 Feb 2026', rating: 4, text: 'Good sessions, though sometimes a bit short.', visible: true },
+{ author: 'Anon.', date: '17 Jan 2026', rating: 3, text: 'Decent experience, not for everyone.', visible: false }];
+
+function Stars({ n }) {
+  return <span style={{ color: '#f5a623', fontSize: 14, letterSpacing: 1 }}>{'★'.repeat(n)}{'☆'.repeat(5 - n)}</span>;
+}
+
+function TabListingReviews() {
+  const fields = [
+  { label: 'Introduction', hint: 'Short intro shown in search results', type: 'textarea', rows: 3, value: 'Ik help mensen om stress en burn-out te overwinnen door middel van evidence-based technieken...' },
+  { label: 'About', hint: 'Full profile description', type: 'textarea', rows: 5, value: 'Met meer dan 10 jaar ervaring als psycholoog...' },
+  { label: 'Expectations', hint: 'What clients can expect from sessions', type: 'textarea', rows: 3, value: 'In onze sessies werken we samen aan...' },
+  { label: 'Field D', hint: '', type: 'textarea', rows: 2, value: '' },
+  { label: 'Field E', hint: '', type: 'textarea', rows: 2, value: '' }];
+
+  const [reviews, setReviews] = useState(reviewsData);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {fields.map((f, i) =>
+      <div key={i} className="field-row">
+          <div>
+            <div className="field-label">{f.label}</div>
+            {f.hint && <div className="field-hint">{f.hint}</div>}
+          </div>
+          <textarea className="sk-textarea" rows={f.rows} defaultValue={f.value} />
+        </div>
+      )}
+      <div style={{ marginTop: 16, marginBottom: 32 }}><button className="sk-btn sk-btn-accent">Save changes</button></div>
+
+      {/* Reviews section */}
+      <div style={{ borderTop: '2px solid #333', paddingTop: 20 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <div>
+            <div style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 18 }}>Reviews</div>
+            <div style={{ fontFamily: 'Caveat', fontSize: 13, color: '#888' }}>{reviews.length} reviews</div>
+          </div>
+          <button className="sk-btn" style={{ fontSize: 12 }}>+ Add review</button>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {reviews.map((r, i) =>
+          <div key={i} className="review-row">
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                  <span style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 14 }}>{r.author}</span>
+                  <Stars n={r.rating} />
+                  <span style={{ fontFamily: 'Caveat', fontSize: 12, color: '#aaa' }}>{r.date}</span>
+                </div>
+                <div style={{ fontFamily: 'Caveat', fontSize: 13, color: '#555' }}>{r.text}</div>
+              </div>
+              <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                <button className="sk-btn sk-btn-danger" style={{ fontSize: 11, padding: '3px 10px' }}>Delete</button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>);
+
+}
+
+/* ── HISTORY TAB ── */
+const historyData = [
+{ date: '29 Apr 2026 · 09:41', user: 'SA', action: 'Status changed', 'detail': 'Draft → New to Review' },
+{ date: '28 Apr 2026 · 16:22', user: 'ER', action: 'Listing updated', 'detail': 'Introduction, About text' },
+{ date: '27 Apr 2026 · 11:05', user: 'SA', action: 'Theme added', 'detail': '"Change & Resilience"' },
+{ date: '25 Apr 2026 · 09:00', user: 'SA', action: 'Sent to Expert', 'detail': 'Email notification sent' },
+{ date: '20 Apr 2026 · 14:30', user: 'SA', action: 'Listing created', 'detail': 'From template — Psychologist' },
+{ date: '18 Apr 2026 · 10:00', user: 'SA', action: 'Expert account created', 'detail': '' }];
+
+
+function TabHistory() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      <div style={{ position: 'absolute', left: 4, top: 8, bottom: 8, width: 2, background: '#ddd', borderRadius: 2, zIndex: 0 }} />
+      {historyData.map((h, i) =>
+      <div key={i} className="history-row" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="history-dot" />
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 2 }}>
+              <span style={{ fontFamily: 'Caveat', fontWeight: 700, fontSize: 14 }}>{h.action}</span>
+              {h.detail && <span style={{ fontFamily: 'Caveat', fontSize: 12, color: '#888' }}>{h.detail}</span>}
+            </div>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#aaa' }}>{h.date}</span>
+              <span style={{ display: 'inline-block', background: '#333', color: '#fafaf8', borderRadius: 10, padding: '0 6px', fontFamily: 'Caveat', fontSize: 11 }}>{h.user}</span>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>);
+
+}
+
+/* ── MAIN ── */
+function ListingDetail() {
+  const [tab, setTab] = useState('Overview');
+
+  const tabContent = {
+    'Overview': <TabOverview />,
+    'Expert': <TabExpert />,
+    'Marketplace': <TabLocationMarketplace />,
+    'Listing': <TabListingReviews />,
+    'History': <TabHistory />
+  };
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      <Sidebar />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <TopSection status="Published" exclusive={true} />
+        <TabBar active={tab} onChange={setTab} />
+        <div style={{ flex: 1, overflow: 'auto', padding: '20px 24px', background: '#fafaf8' }}>
+          {tabContent[tab]}
+        </div>
+      </div>
+    </div>);
+
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<ListingDetail />);
+
+
+</script>
+</body>
+</html>

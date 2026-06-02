@@ -7,7 +7,7 @@ const TONE = {
   u: { bar: "rgb(180,184,196)", soft: "rgb(240,240,243)", ink: "rgb(92,92,120)", label: "Onbekend" },
 };
 
-function CaseStateCard({ label, value, breakdown }) {
+function CaseStateCard({ label, value, breakdown, accent }) {
   const [hover, setHover] = React.useState(null);
   const total = breakdown.p + breakdown.c + breakdown.u;
   const safeTotal = Math.max(1, total);
@@ -16,95 +16,150 @@ function CaseStateCard({ label, value, breakdown }) {
     { k: "c", n: breakdown.c, tone: TONE.c },
     { k: "u", n: breakdown.u, tone: TONE.u },
   ];
+  const a = accent || { bg: "white", border: C.border, label: C.mute };
   return (
-    <Card padding={20} style={{ gap: 14 }}>
-      <div style={{ fontFamily: "Wallop, Inter", fontWeight: 500, fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: C.mute }}>
+    <Card padding={20} style={{ gap: 14, background: a.bg, border: `1px solid ${a.border}` }}>
+      <div style={{ fontFamily: "Wallop, Inter", fontWeight: 600, fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: a.label }}>
         {label}
       </div>
-      <div style={{ fontFamily: "Jeko, Inter", fontWeight: 700, fontSize: 36, lineHeight: "40px", letterSpacing: "-0.02em", color: C.ink }}>
-        {value}
-      </div>
-      <div style={{ position: "relative" }}>
-        {total === 0 ? (
-          <div style={{ height: 24, background: "rgb(245,245,247)", borderRadius: 6 }} />
-        ) : (
-          <div style={{ height: 24, background: "rgb(245,245,247)", borderRadius: 6, overflow: "hidden", display: "flex" }}>
-            {segs.filter((s) => s.n > 0).map((s) => (
-              <div
-                key={s.k}
-                onMouseEnter={() => setHover(s.k)}
-                onMouseLeave={() => setHover(null)}
-                style={{
-                  flex: s.n,
-                  background: s.tone.bar,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "white",
-                  fontFamily: "Jeko, Inter, system-ui",
-                  fontWeight: 600,
-                  fontSize: 11,
-                  letterSpacing: "0.02em",
-                  cursor: "default",
-                  opacity: hover && hover !== s.k ? 0.45 : 1,
-                  transition: "opacity .15s",
-                }}
-              >
-                {s.n}
+      <div style={{ display: "flex", gap: 18, alignItems: "stretch" }}>
+        {/* Big number */}
+        <div style={{ fontFamily: "Jeko, Inter", fontWeight: 700, fontSize: 40, lineHeight: "44px", letterSpacing: "-0.02em", color: C.ink, flexShrink: 0 }}>
+          {value}
+        </div>
+        {/* Divider */}
+        <div style={{ width: 1, background: a.border, alignSelf: "stretch" }} />
+        {/* Bar + legend, stacked, beside the number */}
+        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+          <div style={{ position: "relative" }}>
+            {total === 0 ? (
+              <div style={{ height: 18, background: "rgba(0,0,0,0.05)", borderRadius: 5 }} />
+            ) : (
+              <div style={{ height: 18, background: "rgba(0,0,0,0.05)", borderRadius: 5, overflow: "hidden", display: "flex" }}>
+                {segs.filter((s) => s.n > 0).map((s) => (
+                  <div
+                    key={s.k}
+                    onMouseEnter={() => setHover(s.k)}
+                    onMouseLeave={() => setHover(null)}
+                    style={{
+                      flex: s.n,
+                      background: s.tone.bar,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: "white",
+                      fontFamily: "Jeko, Inter, system-ui",
+                      fontWeight: 600,
+                      fontSize: 10,
+                      letterSpacing: "0.02em",
+                      cursor: "default",
+                      opacity: hover && hover !== s.k ? 0.45 : 1,
+                      transition: "opacity .15s",
+                    }}
+                  >
+                    {s.n}
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+            {hover && total > 0 && (
+              <div style={{
+                position: "absolute",
+                left: "50%", top: -8,
+                transform: "translate(-50%, -100%)",
+                background: C.ink, color: "white",
+                padding: "6px 10px", borderRadius: 8,
+                fontFamily: "Wallop, Inter", fontSize: 12, fontWeight: 500,
+                whiteSpace: "nowrap",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.18)",
+                pointerEvents: "none",
+                zIndex: 5,
+              }}>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 8, height: 8, borderRadius: 2, background: TONE[hover].bar }} />
+                  {TONE[hover].label} · <strong>{breakdown[hover]}</strong> van {total} ({Math.round((breakdown[hover] / safeTotal) * 100)}%)
+                </span>
+              </div>
+            )}
           </div>
-        )}
-        {hover && total > 0 && (
-          <div style={{
-            position: "absolute",
-            left: "50%", top: -8,
-            transform: "translate(-50%, -100%)",
-            background: C.ink, color: "white",
-            padding: "6px 10px", borderRadius: 8,
-            fontFamily: "Wallop, Inter", fontSize: 12, fontWeight: 500,
-            whiteSpace: "nowrap",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.18)",
-            pointerEvents: "none",
-            zIndex: 5,
-          }}>
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-              <span style={{ width: 8, height: 8, borderRadius: 2, background: TONE[hover].bar }} />
-              {TONE[hover].label} · <strong>{breakdown[hover]}</strong> van {total} ({Math.round((breakdown[hover] / safeTotal) * 100)}%)
-            </span>
+
+          {/* Always-visible compact legend */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            {segs.map((s) => {
+              const muted = s.n === 0;
+              return (
+                <span key={s.k} style={{
+                  display: "flex", alignItems: "center", gap: 6,
+                  fontFamily: "Wallop, Inter", fontSize: 11.5, lineHeight: "15px",
+                  color: muted ? C.mute : C.ink2, opacity: muted ? 0.55 : 1,
+                }}>
+                  <span style={{ width: 7, height: 7, borderRadius: 2, background: s.tone.bar, flexShrink: 0 }} />
+                  <span style={{ flex: 1, minWidth: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{s.tone.label}</span>
+                  <span style={{ fontFamily: "Jeko, Inter", fontWeight: 600, color: muted ? C.mute : C.ink }}>{s.n}</span>
+                </span>
+              );
+            })}
           </div>
-        )}
+        </div>
       </div>
     </Card>
   );
 }
 
+// Outcome palette for closed-case goal attainment
+const OUTCOME = {
+  reached:    { bar: "rgb(7,148,85)",   label: "Doel bereikt" },
+  partial:    { bar: "rgb(245,176,3)",  label: "Gedeeltelijk" },
+  notReached: { bar: "rgb(217,138,138)",label: "Niet bereikt" },
+};
+
+function GoalTypeRow({ tone, typeLabel, o }) {
+  const total = Math.max(1, o.total);
+  const reachedPct = Math.round((o.reached / total) * 100);
+  const segs = [
+    { k: "reached", n: o.reached },
+    { k: "partial", n: o.partial },
+    { k: "notReached", n: o.notReached },
+  ];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 7, minWidth: 0, fontFamily: "Wallop, Inter", fontSize: 13, fontWeight: 600, color: C.ink2 }}>
+          <span style={{ width: 8, height: 8, borderRadius: 2, background: tone.bar, flexShrink: 0 }} />
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{typeLabel}</span>
+        </span>
+        <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6, whiteSpace: "nowrap", flexShrink: 0 }}>
+          <span style={{ fontFamily: "Jeko, Inter", fontWeight: 700, fontSize: 18, color: OUTCOME.reached.bar }}>{reachedPct}%</span>
+          <span style={{ fontFamily: "Wallop, Inter", fontSize: 12, color: C.mute }}>bereikt · {o.total} gesloten</span>
+        </span>
+      </div>
+      <div style={{ height: 16, background: "rgb(245,245,247)", borderRadius: 5, overflow: "hidden", display: "flex" }}>
+        {segs.filter((s) => s.n > 0).map((s) => (
+          <div key={s.k} title={`${OUTCOME[s.k].label}: ${s.n}`} style={{
+            flex: s.n, background: OUTCOME[s.k].bar,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: "white", fontFamily: "Jeko, Inter, system-ui", fontWeight: 600, fontSize: 10,
+          }}>{s.n}</div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function GoalReachedCard({ d }) {
-  const total = Math.max(1, d.total);
-  const pct = Math.round((d.reached / total) * 100);
-  const cir = 2 * Math.PI * 52;
   return (
     <Card title="Gesloten · doel bereikt"
-      action={<span title="Op basis van gesloten trajecten" style={{ color: C.mute, cursor: "help" }}>{Icon.info}</span>}>
-      <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-        <svg width="140" height="140" viewBox="0 0 140 140" style={{ flexShrink: 0 }}>
-          <circle cx="70" cy="70" r="56" stroke="rgb(245,245,247)" strokeWidth="16" fill="none" />
-          <circle cx="70" cy="70" r="56" stroke={TONE.p.bar} strokeWidth="16" fill="none"
-            strokeDasharray={`${(pct / 100) * (2 * Math.PI * 56)} ${2 * Math.PI * 56}`}
-            strokeLinecap="round"
-            transform="rotate(-90 70 70)" />
-          <text x="70" y="76" textAnchor="middle" style={{ fontFamily: "Jeko, Inter", fontWeight: 700, fontSize: 30, fill: TONE.p.ink }}>{pct}%</text>
-        </svg>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
-          <div style={{ fontFamily: "Jeko, Inter", fontWeight: 700, fontSize: 28, lineHeight: "32px", color: C.ink }}>
-            {d.reached} <span style={{ color: C.mute, fontFamily: "Wallop, Inter", fontWeight: 500, fontSize: 16 }}>van {d.total}</span>
-          </div>
-          <div style={{ fontFamily: "Wallop, Inter", fontSize: 14, color: C.mute2, lineHeight: "20px" }}>
-            gesloten trajecten bereikten het beoogde doel
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 4 }}>
-            <Pill color={TONE.p.bar} label={`${d.reached} bereikt`} />
-            <Pill color={C.mute} label={`${d.total - d.reached} niet bereikt`} />
-          </div>
-        </div>
+      action={<span title="Alleen afgeronde trajecten tellen mee" style={{ color: C.mute, cursor: "help" }}>{Icon.info}</span>}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <GoalTypeRow tone={TONE.p} typeLabel="Verzuim voorkomen" o={d.p} />
+        <GoalTypeRow tone={TONE.c} typeLabel="Terugkeer bespoedigen" o={d.c} />
+      </div>
+      {/* Outcome legend */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px", paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+        {Object.keys(OUTCOME).map((k) => (
+          <span key={k} style={{ display: "inline-flex", alignItems: "center", gap: 7, fontFamily: "Wallop, Inter", fontSize: 12, color: C.mute2 }}>
+            <span style={{ width: 8, height: 8, borderRadius: 2, background: OUTCOME[k].bar }} />
+            {OUTCOME[k].label}
+          </span>
+        ))}
       </div>
     </Card>
   );
@@ -256,4 +311,18 @@ function LopendeCasesStacked({ data, current }) {
   );
 }
 
-Object.assign(window, { TONE, CaseStateCard, GoalReachedCard, StackedArea, LopendeCasesStacked });
+// Wraps a card to render it visually de-emphasised (out of scope for the prototype).
+function Dimmed({ children }) {
+  return (
+    <div style={{
+      opacity: 0.5,
+      filter: "saturate(0.4)",
+      pointerEvents: "none",
+      userSelect: "none",
+    }}>
+      {children}
+    </div>
+  );
+}
+
+Object.assign(window, { TONE, CaseStateCard, GoalReachedCard, StackedArea, LopendeCasesStacked, Dimmed });

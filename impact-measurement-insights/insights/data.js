@@ -59,10 +59,13 @@ window.INSIGHTS_DATA = {
   cases: {
     opened:  { total: 1, p: 1, c: 0, u: 0 },
     running: { total: 8, p: 3, c: 4, u: 1 },
-    closed:  { total: 4, p: 2, c: 2, u: 0 },
+    closed:  { total: 11, p: 5, c: 6, u: 0 },
   },
-  // Doel-bereikt (only on gesloten)
-  closedGoal: { reached: 3, notReached: 1, total: 4 },
+  // Doel-bereikt (only on gesloten), split by type with 3 outcomes
+  closedGoal: {
+    p: { reached: 3, partial: 1, notReached: 1, total: 5 }, // verzuim voorkomen
+    c: { reached: 4, partial: 1, notReached: 1, total: 6 }, // terugkeer bespoedigen
+  },
   avgRuntime: "2 maanden, 4 dagen",
   topThemes: [
     { name: "Burn-out", value: 0.92 },
@@ -92,11 +95,11 @@ window.INSIGHTS_DATA = {
     { d: "4 feb",  k: 0, s: 1 },
   ],
   bookers: [
-    { initials: "AW", name: "Anneloes Wiersma", color: "#FCE7B5", cases: 3, spend: 1200 },
-    { initials: "HL", name: "Hanneke Lodewijks", color: "#C7E0FF", cases: 1, spend: 650 },
-    { initials: "GW", name: "Georgia Wijnands",  color: "#FFD8B0", cases: 1, spend: 700 },
-    { initials: "LD", name: "Laura van Dunnen",  color: "#D4F1E0", cases: 1, spend: 890 },
-    { initials: "AG", name: "Alena Gouse",       color: "#E7D6FF", cases: 0, spend: 0 },
+    { initials: "AW", name: "Anneloes Wiersma", color: "#FCE7B5", cases: 3, p: 1, c: 1, u: 1, spend: 1200 },
+    { initials: "HL", name: "Hanneke Lodewijks", color: "#C7E0FF", cases: 1, p: 0, c: 1, u: 0, spend: 650 },
+    { initials: "GW", name: "Georgia Wijnands",  color: "#FFD8B0", cases: 1, p: 1, c: 0, u: 0, spend: 700 },
+    { initials: "LD", name: "Laura van Dunnen",  color: "#D4F1E0", cases: 1, p: 0, c: 1, u: 0, spend: 890 },
+    { initials: "AG", name: "Alena Gouse",       color: "#E7D6FF", cases: 0, p: 0, c: 0, u: 0, spend: 0 },
     { initials: "MS", name: "Mariska Scheenen",  color: "#FFD0E0", cases: null, spend: 0, invited: true },
   ],
   experts: [

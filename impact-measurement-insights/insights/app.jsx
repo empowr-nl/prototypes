@@ -36,9 +36,18 @@ function App() {
 
         {/* Cases row — 3 state KPIs (small) */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16, marginBottom: 16 }}>
-          <CaseStateCard label="Geopend" value={d.cases.opened.total} breakdown={d.cases.opened} />
-          <CaseStateCard label="Lopend"  value={d.cases.running.total} breakdown={d.cases.running} />
-          <CaseStateCard label="Gesloten" value={d.cases.closed.total} breakdown={d.cases.closed} />
+          <CaseStateCard label="Geopend" value={d.cases.opened.total} breakdown={d.cases.opened}
+            accent={{ bg: "rgb(239,246,255)", border: "rgb(213,229,251)", label: "rgb(37,99,180)" }} />
+          <CaseStateCard label="Lopend"  value={d.cases.running.total} breakdown={d.cases.running}
+            accent={{ bg: "rgb(255,250,235)", border: "rgb(248,233,193)", label: "rgb(180,131,10)" }} />
+          <CaseStateCard label="Gesloten" value={d.cases.closed.total} breakdown={d.cases.closed}
+            accent={{ bg: "rgb(240,250,244)", border: "rgb(208,236,219)", label: "rgb(20,120,75)" }} />
+        </div>
+
+        {/* Doel bereikt + Alle Cases row */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+          <Dimmed><AlleCasesCard d={d} /></Dimmed>
+          <GoalReachedCard d={d.closedGoal} />
         </div>
 
         {/* Lopende cases — full width, stacked area */}
@@ -46,14 +55,12 @@ function App() {
           <LopendeCasesStacked data={d.runningOverTime} current={d.cases.running.total} />
         </div>
 
-        {/* Original operational layout, with Doel bereikt slotting in next to Alle Cases */}
+        {/* Remaining operational layout */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          <AlleCasesCard d={d} />
-          <GoalReachedCard d={d.closedGoal} />
-          <UitgavenCard d={d} />
-          <BoekingenCard d={d} />
+          <Dimmed><UitgavenCard d={d} /></Dimmed>
+          <Dimmed><BoekingenCard d={d} /></Dimmed>
           <StatsBoekersCard d={d} />
-          <StatsExpertsCard d={d} />
+          <Dimmed><StatsExpertsCard d={d} /></Dimmed>
         </div>
       </main>
 
